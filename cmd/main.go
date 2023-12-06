@@ -48,9 +48,10 @@ func main() {
 		slog.Error("error solving %s %v", "day2", err)
 	}
 
-	if err := day5.SolveB(); err != nil {
-		slog.Error("error solving %s %v", "day2b", err)
-	}
+	slog.Info("day5 solution b ***SKIP***")
+	//if err := day5.SolveB(); err != nil {
+	//	slog.Error("error solving %s %v", "day2b", err)
+	//}
 
 	if err := day6.Solve(); err != nil {
 		slog.Error("error solving %s %v", "day2", err)

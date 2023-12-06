@@ -45,10 +45,6 @@ func Solve() error {
 }
 
 func SolveB() error {
-
-	slog.Info("day5 solution b ***SKIP***")
-	return nil
-
 	seeds, maps, err := parse("day5")
 	if err != nil {
 		return err

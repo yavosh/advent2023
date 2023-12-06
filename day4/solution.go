@@ -111,14 +111,11 @@ func SolveB() error {
 			panic(fmt.Sprintf("missing card %d", c))
 		}
 
-		//fmt.Println("c", c, "all", all)
 		for i := c + 1; i <= c+card.Score; i++ {
 			all = append(all, i)
 		}
-		//fmt.Println("c", c, "all", all)
 	}
 
-	fmt.Printf("cards \n%s\n", advent2023.Dump(cards))
 	slog.Info("day4 solution b", "result", result)
 	return nil
 }
