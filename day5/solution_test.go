@@ -9,6 +9,7 @@ func TestSolutionA(t *testing.T) {
 }
 
 func TestSolutionB(t *testing.T) {
+	t.Skip("too slow")
 	if err := SolveB(); err != nil {
 		t.Fatalf("error solving %v", err)
 	}

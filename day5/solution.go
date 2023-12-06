@@ -68,21 +68,13 @@ func SolveB() error {
 
 	slog.Info("seeds", "seeds", seeds, "seedRange", seedRange)
 
-	//res := walk(14, maps, path)
-	//slog.Info("res 14", "res", res)
-
 	cnt := 0
-
 	visited := make(map[int64]int64)
-
 	for _, rng := range seedRange {
 		slog.Info("range", "range", rng)
 
 		for i := rng[0]; i < rng[0]+rng[1]; i++ {
-
 			seed := i
-
-			//slog.Info("seed", "range", rng, "seed", seed)
 			cnt++
 
 			if _, ok := visited[seed]; !ok {
@@ -92,7 +84,6 @@ func SolveB() error {
 				}
 			}
 		}
-
 	}
 
 	slog.Info("day5 solution b", "seeds", seeds, "cnt", cnt, "result", result)
@@ -162,7 +153,6 @@ func parse(in string) ([]int64, map[string][]mapper, error) {
 		}
 
 		values = append(values, mapper{dst: fields[0], src: fields[1], c: fields[2]})
-		//slog.Info("map", "map", name, "values", values)
 	}
 
 	return advent2023.Int64s(seeds...), maps, nil
