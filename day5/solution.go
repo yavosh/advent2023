@@ -30,9 +30,6 @@ func Solve() error {
 		"humidity-to-location",
 	}
 
-	//res := walk(14, maps, path)
-	//slog.Info("res 14", "res", res)
-
 	for _, seed := range seeds {
 		res := walk(seed, maps, path)
 		//slog.Info("res ", "seed", seed, "res", res)
@@ -43,11 +40,15 @@ func Solve() error {
 
 	}
 
-	slog.Info("solution a", "seeds", seeds, "result", result)
+	slog.Info("day5 solution a", "result", result)
 	return nil
 }
 
 func SolveB() error {
+
+	slog.Info("day5 solution b ***SKIP***")
+	return nil
+
 	seeds, maps, err := parse("day5")
 	if err != nil {
 		return err
@@ -98,7 +99,7 @@ func SolveB() error {
 
 	}
 
-	slog.Info("solution b", "seeds", seeds, "cnt", cnt, "result", result)
+	slog.Info("day5 solution b", "seeds", seeds, "cnt", cnt, "result", result)
 	return nil
 }
 
@@ -111,44 +112,16 @@ func walk(id int64, data map[string][]mapper, maps []string) int64 {
 			panic("unknown map " + name)
 		}
 
-		//slog.Info("1 mapper ->", "name", name, "res", res)
-
-		//before := res
-
 		for _, mapper := range mappers {
 			if res >= mapper.src && res < mapper.src+mapper.c {
 				delta := res - mapper.src
-				//slog.Info("FOUND mapper ->",
-				//	"name", name,
-				//	"mapper", mapper,
-				//	"delta", delta,
-				//	"from", res,
-				//	"to", mapper.dst+delta,
-				//)
-
 				res = mapper.dst + delta
 				break // done
 			} else {
 				// 1-1 mapping no change, equivalent to res=res
 			}
 		}
-
-		//slog.Info("2 mapper ->", "name", name, "res", res)
-
-		//slog.Info(fmt.Sprintf("mapper %q %d %d -> %d ", name, id, before, res))
-
-		//
-		//if val, ok := m[res]; !ok {
-		//	// not found 1-1 mapping
-		//	// res = res
-		//} else {
-		//	res = val
-		//}
-
-		//slog.Info(fmt.Sprintf("walk %s %d", name, res))
 	}
-
-	//fmt.Println()
 
 	return res
 }

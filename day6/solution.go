@@ -49,7 +49,7 @@ func Solve() error {
 	}
 
 	//slog.Info("data", "races", races)
-	slog.Info("solution a", "result", result)
+	slog.Info("day6 solution a", "result", result)
 	return nil
 }
 
@@ -78,7 +78,7 @@ func SolveB() error {
 	result = wins
 
 	//slog.Info("data", "theRace", theRace)
-	slog.Info("solution b", "result", result)
+	slog.Info("day6 solution b", "result", result)
 	return nil
 }
 

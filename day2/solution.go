@@ -44,7 +44,7 @@ func Solve() error {
 		result += g
 	}
 
-	slog.Info("solution a", "result", result)
+	slog.Info("day2 solution a", "result", result)
 	return nil
 }
 
@@ -69,7 +69,7 @@ func SolveB() error {
 		result += gameSet["red"] * gameSet["green"] * gameSet["blue"]
 	}
 
-	slog.Info("solution b", "result", result)
+	slog.Info("day2 solution b", "result", result)
 	return nil
 }
 

@@ -15,6 +15,25 @@ const (
 	NewLine = "\n"
 )
 
+type Set map[string]struct{}
+
+func (s Set) Contains(v string) bool {
+	if _, ok := s[v]; ok {
+		return true
+	}
+
+	return false
+}
+
+func ToSet(in []string) Set {
+	res := make(Set)
+	for _, v := range in {
+		res[v] = struct{}{}
+	}
+
+	return res
+}
+
 func IntKeys(in map[int]int) []int {
 	res := make([]int, 0)
 	for k := range in {

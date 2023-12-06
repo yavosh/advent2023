@@ -51,7 +51,7 @@ func Solve() error {
 
 	//slog.Info("data", "grid", data)
 	//slog.Info("data", "parts", parts, "not parts", notParts)
-	slog.Info("solution a", "result", result)
+	slog.Info("day3 solution a", "result", result)
 	return nil
 }
 
@@ -133,7 +133,7 @@ func SolveB() error {
 	//slog.Info("data", "grid", data)
 	//slog.Info("data", "parts", parts, "not parts", notParts)
 	//slog.Info("gears", "gears", gears)
-	slog.Info("solution b", "result", result)
+	slog.Info("day3 solution b", "result", result)
 	return nil
 }
 

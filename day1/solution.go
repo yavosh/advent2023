@@ -32,7 +32,7 @@ func Solve() error {
 		acc += num
 	}
 
-	slog.Info("solution a", "result", acc)
+	slog.Info("day1 solution a", "result", acc)
 	return err
 }
 
@@ -60,7 +60,7 @@ func SolveB() error {
 		acc += num
 	}
 
-	slog.Info("solution b", "result", acc)
+	slog.Info("day1 solution b", "result", acc)
 	return err
 }
 
