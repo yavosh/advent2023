@@ -1,9 +1,9 @@
-# Advent 2023 
+# Advent 2023
 
 Advent of code 2023 (https://adventofcode.com/2023)
 
-## One more try
+## An other year an other advent
 
-Run with 
+Run with
 
     make solutions
