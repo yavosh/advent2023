@@ -3,6 +3,8 @@ package advent2023
 import (
 	"embed"
 	_ "embed"
+	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -12,6 +14,42 @@ var input embed.FS
 const (
 	NewLine = "\n"
 )
+
+func IntKeys(in map[int]int) []int {
+	res := make([]int, 0)
+	for k := range in {
+		res = append(res, k)
+	}
+
+	return res
+
+}
+
+func Ints(in ...string) []int {
+	res := make([]int, len(in))
+	for i, v := range in {
+		if a, err := strconv.ParseInt(v, 10, 32); err != nil {
+			panic(fmt.Errorf("invalid value %q: %v", v, err))
+		} else {
+			res[i] = int(a)
+		}
+	}
+
+	return res
+}
+
+func Int64s(in ...string) []int64 {
+	res := make([]int64, len(in))
+	for i, v := range in {
+		if a, err := strconv.ParseInt(v, 10, 64); err != nil {
+			panic(fmt.Errorf("invalid value %q: %v", v, err))
+		} else {
+			res[i] = a
+		}
+	}
+
+	return res
+}
 
 func Input(d string) (string, error) {
 	file, err := input.ReadFile("input/" + d + ".txt")

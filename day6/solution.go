@@ -4,17 +4,24 @@ import (
 	"fmt"
 	"github.com/yavosh/advent2023"
 	"log/slog"
+	"strconv"
+	"strings"
 )
 
+type race struct {
+	id       string
+	dur      int64
+	distance int64
+}
+
 func Solve() error {
-	data, err := advent2023.Grid("day6-sample")
+	races, err := load("day6")
 	if err != nil {
-		return err
+		return fmt.Errorf("error loading data: %w", err)
 	}
 
-	result := 0
-	speed := 0.0
-	charge := 1.0 // millimeter per millisecond
+	result := int64(1)
+	charge := int64(1) // millimeter per millisecond
 
 	/*
 		    To guarantee you win the grand prize, you need to make sure you go farther in each race than the
@@ -25,241 +32,124 @@ func Solve() error {
 			speed increases by one millimeter per millisecond.
 	*/
 
-	slog.Info("data", "grid", data)
-	slog.Info("x", "speed", speed, "charge", charge)
+	for _, r := range races {
+		wins := int64(0)
+		for i := int64(0); i <= r.dur; i++ {
+			// travel is charge times remaining time
+			travel := (i * charge) * (r.dur - i)
+			//slog.Info(fmt.Sprintf("for %d ms we would travel %d", i, travel), "race", r)
+
+			if travel > r.distance {
+				//slog.Info(fmt.Sprintf("WIN for %d ms we would travel %d", i, travel), "race", r)
+				wins++
+			}
+		}
+
+		result *= wins
+	}
+
+	//slog.Info("data", "races", races)
 	slog.Info("solution a", "result", result)
 	return nil
 }
 
 func SolveB() error {
-	data, err := advent2023.Grid("day6-sample")
+	theRace, err := load2("day6")
 	if err != nil {
 		return err
 	}
 
-	result := 0
+	result := int64(1)
+	charge := int64(1) // millimeter per millisecond
 
-	slog.Info("data", "grid", data)
+	wins := int64(0)
+
+	// time complexity could be simplified
+	for i := int64(0); i <= theRace.dur; i++ {
+		// travel is charge times remaining time
+		travel := (i * charge) * (theRace.dur - i)
+		//slog.Info(fmt.Sprintf("for %d ms we would travel %d", i, travel), "race", r)
+		if travel > theRace.distance {
+			//slog.Info(fmt.Sprintf("WIN for %d ms we would travel %d", i, travel), "race", r)
+			wins++
+		}
+	}
+
+	result = wins
+
+	//slog.Info("data", "theRace", theRace)
 	slog.Info("solution b", "result", result)
 	return nil
 }
 
-func adjacentSymbol(plan [][]rune, y, x int) bool {
-	if len(plan) == 0 || len(plan[0]) == 0 {
-		panic("empty plan")
+func load(name string) ([]race, error) {
+	data, err := advent2023.Lines(name)
+	if err != nil {
+		return nil, err
 	}
 
-	ybounds := len(plan) - 1
-	xbounds := len(plan[0]) - 1
+	var races []race
 
-	//slog.Info("plan", "ybounds", ybounds, "xbounds", xbounds)
-
-	if y > 0 && x > 0 {
-		// up left
-		if advent2023.IsSymbol(plan[y-1][x-1]) {
-			return true
+	for _, line := range data {
+		if strings.HasPrefix(line, "Time:    ") {
+			values := strings.Fields(line[9:])
+			races = make([]race, len(values))
+			for i, v := range values {
+				if a, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64); err != nil {
+					return nil, fmt.Errorf("invalid time value %q: %v", v, err)
+				} else {
+					races[i].id = fmt.Sprintf("race-%d", i+1)
+					races[i].dur = a
+				}
+			}
 		}
-	}
 
-	if y > 0 {
-		// up
-		if advent2023.IsSymbol(plan[y-1][x]) {
-			return true
+		if strings.HasPrefix(line, "Distance:") {
+			values := strings.Fields(line[9:])
+			for i, v := range values {
+				if a, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64); err != nil {
+					return nil, fmt.Errorf("invalid distance value %q: %v", v, err)
+				} else {
+					races[i].distance = a
+				}
+			}
 		}
+
 	}
 
-	if y > 0 && x < xbounds {
-		// up right
-		if advent2023.IsSymbol(plan[y-1][x+1]) {
-			return true
-		}
-	}
-
-	if x < xbounds {
-		// right
-		if advent2023.IsSymbol(plan[y][x+1]) {
-			return true
-		}
-	}
-
-	if y < ybounds && x < xbounds {
-		// right down
-		if advent2023.IsSymbol(plan[y+1][x+1]) {
-			return true
-		}
-	}
-
-	if y < ybounds {
-		// down
-		if advent2023.IsSymbol(plan[y+1][x]) {
-			return true
-		}
-	}
-
-	if y < ybounds && x > 0 {
-		// down left
-		if advent2023.IsSymbol(plan[y+1][x-1]) {
-			return true
-		}
-	}
-
-	if x > 0 {
-		// left
-		if advent2023.IsSymbol(plan[y][x-1]) {
-			return true
-		}
-	}
-
-	return false
+	return races, nil
 }
 
-func adjacentCountFunc(plan [][]rune, y, x int, check func(rune) bool) int {
-	if len(plan) == 0 || len(plan[0]) == 0 {
-		panic("empty plan")
+func load2(name string) (race, error) {
+	data, err := advent2023.Lines(name)
+	if err != nil {
+		return race{}, err
 	}
 
-	ybounds := len(plan) - 1
-	xbounds := len(plan[0]) - 1
+	r := race{
+		id:       "the big one",
+		dur:      0,
+		distance: 0,
+	}
 
-	//slog.Info("plan", "ybounds", ybounds, "xbounds", xbounds)
-
-	acc := 0
-
-	if y > 0 && x > 0 {
-		// up left
-		if check(plan[y-1][x-1]) {
-			acc++
+	for _, line := range data {
+		if strings.HasPrefix(line, "Time:    ") {
+			val := strings.ReplaceAll(line[9:], " ", "")
+			if a, err := strconv.ParseInt(strings.TrimSpace(val), 10, 64); err != nil {
+				return race{}, fmt.Errorf("error parsing line %q: %v", line, err)
+			} else {
+				r.dur = a
+			}
+		}
+		if strings.HasPrefix(line, "Distance:") {
+			val := strings.ReplaceAll(line[9:], " ", "")
+			if a, err := strconv.ParseInt(strings.TrimSpace(val), 10, 64); err != nil {
+				return race{}, fmt.Errorf("error parsing line %q: %v", line, err)
+			} else {
+				r.distance = a
+			}
 		}
 	}
 
-	if y > 0 {
-		// up
-		if check(plan[y-1][x]) {
-			acc++
-		}
-	}
-
-	if y > 0 && x < xbounds {
-		// up right
-		if check(plan[y-1][x+1]) {
-			acc++
-		}
-	}
-
-	if x < xbounds {
-		// right
-		if check(plan[y][x+1]) {
-			acc++
-		}
-	}
-
-	if y < ybounds && x < xbounds {
-		// right down
-		if check(plan[y+1][x+1]) {
-			acc++
-		}
-	}
-
-	if y < ybounds {
-		// down
-		if check(plan[y+1][x]) {
-			acc++
-		}
-	}
-
-	if y < ybounds && x > 0 {
-		// down left
-		if check(plan[y+1][x-1]) {
-			acc++
-		}
-	}
-
-	if x > 0 {
-		// left
-		if check(plan[y][x-1]) {
-			acc++
-		}
-	}
-
-	return acc
-}
-
-func adjacentTilesFunc(plan [][]rune, y, x int, check func(rune) bool) []string {
-	if len(plan) == 0 || len(plan[0]) == 0 {
-		panic("empty plan")
-	}
-
-	ybounds := len(plan) - 1
-	xbounds := len(plan[0]) - 1
-
-	//slog.Info("plan", "ybounds", ybounds, "xbounds", xbounds)
-
-	acc := 0
-	tiles := make([]string, 0)
-
-	if y > 0 && x > 0 {
-		// up left
-		if check(plan[y-1][x-1]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y-1, x-1))
-		}
-	}
-
-	if y > 0 {
-		// up
-		if check(plan[y-1][x]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y-1, x))
-		}
-	}
-
-	if y > 0 && x < xbounds {
-		// up right
-		if check(plan[y-1][x+1]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y-1, x+1))
-		}
-	}
-
-	if x < xbounds {
-		// right
-		if check(plan[y][x+1]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y, x+1))
-		}
-	}
-
-	if y < ybounds && x < xbounds {
-		// right down
-		if check(plan[y+1][x+1]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y+1, x+1))
-		}
-	}
-
-	if y < ybounds {
-		// down
-		if check(plan[y+1][x]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y+1, x))
-		}
-	}
-
-	if y < ybounds && x > 0 {
-		// down left
-		if check(plan[y+1][x-1]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y+1, x-1))
-		}
-	}
-
-	if x > 0 {
-		// left
-		if check(plan[y][x-1]) {
-			acc++
-			tiles = append(tiles, fmt.Sprintf("%d_%d", y, x-1))
-		}
-	}
-
-	return tiles
+	return r, nil
 }
