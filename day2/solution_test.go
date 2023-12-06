@@ -2,13 +2,14 @@ package day2
 
 import "testing"
 
-func TestSolution(t *testing.T) {
+func TestSolutionA(t *testing.T) {
 	if err := Solve(); err != nil {
 		t.Fatalf("error solving %v", err)
 	}
+}
 
+func TestSolutionB(t *testing.T) {
 	if err := SolveB(); err != nil {
 		t.Fatalf("error solving %v", err)
 	}
-
 }
