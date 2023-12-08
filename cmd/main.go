@@ -7,6 +7,7 @@ import (
 	"github.com/yavosh/advent2023/day4"
 	"github.com/yavosh/advent2023/day5"
 	"github.com/yavosh/advent2023/day6"
+	"github.com/yavosh/advent2023/day7"
 	"log/slog"
 )
 
@@ -58,6 +59,14 @@ func main() {
 	}
 
 	if err := day6.SolveB(); err != nil {
+		slog.Error("error solving %s %v", "day2b", err)
+	}
+
+	if err := day7.Solve(); err != nil {
+		slog.Error("error solving %s %v", "day2", err)
+	}
+
+	if err := day7.SolveB(); err != nil {
 		slog.Error("error solving %s %v", "day2b", err)
 	}
 
