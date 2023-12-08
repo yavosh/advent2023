@@ -80,9 +80,11 @@ func Grid(d string) ([][]rune, error) {
 
 // trimLines will return only string lines which are not empty
 func trimLines(in []string) []string {
-	out := make([]string, len(in))
-	for i, v := range in {
-		out[i] = strings.TrimSpace(v)
+	out := make([]string, 0)
+	for _, v := range in {
+		if strings.TrimSpace(v) != "" {
+			out = append(out, strings.TrimSpace(v))
+		}
 	}
 	return out
 }

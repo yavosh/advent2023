@@ -31,7 +31,15 @@ func IntKeys(in map[int]int) []int {
 	}
 
 	return res
+}
 
+func StrKeys(in map[string]int) []string {
+	res := make([]string, 0)
+	for k := range in {
+		res = append(res, k)
+	}
+
+	return res
 }
 
 func Ints(in ...string) []int {
