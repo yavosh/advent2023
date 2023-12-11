@@ -3,11 +3,26 @@ package day10
 import (
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/yavosh/advent2023"
 )
 
 type plan [][]rune
+
+func (p plan) String() string {
+	b := strings.Builder{}
+	for y, row := range p {
+		b.WriteString(fmt.Sprintf("%04d ", y))
+		for _, r := range row {
+			b.WriteRune(r)
+		}
+
+		b.WriteRune('\n')
+	}
+
+	return b.String()
+}
 
 func (p plan) Y() int {
 	return len(p)
@@ -140,7 +155,14 @@ func possible(plan plan, p pos) []pos {
 	return res
 }
 
-func follow(plan plan, from, to, end pos) (int, error) {
+func follow(plan plan, from, to, end pos) (int, plan, error) {
+	pplan := make([][]rune, len(plan))
+	for x := 0; x < len(plan); x++ {
+		pplan[x] = []rune(strings.Repeat(".", len(plan[0])))
+	}
+
+	pplan[from[0]][from[1]] = plan[from[0]][from[1]]
+	pplan[to[0]][to[1]] = plan[to[0]][to[1]]
 
 	moves := 0
 	for {
@@ -211,13 +233,15 @@ func follow(plan plan, from, to, end pos) (int, error) {
 		pipe = string(plan.AtPos(to))
 		moves++
 
+		pplan[to[0]][to[1]] = plan[to[0]][to[1]]
+
 		// end condition
 		if to == end {
 			break
 		}
 	}
 
-	return moves, nil
+	return moves, pplan, nil
 }
 
 func Solve() error {
@@ -229,9 +253,8 @@ func Solve() error {
 	result := int64(0)
 
 	s := start(grid)
-	//fmt.Println("possible connections", s, " to ", possible(grid, s))
 	for _, c := range possible(grid, s) {
-		moves, err := follow(grid, s, c, s)
+		moves, _, err := follow(grid, s, c, s)
 		if err != nil {
 			fmt.Printf("not valid loop  %s -> %s (%v) \n", s, c, err)
 		} else {
@@ -249,7 +272,7 @@ func Solve() error {
 }
 
 func SolveB() error {
-	_, err := advent2023.Grid("day10-sample")
+	grid, err := advent2023.Grid("day10-sample-a")
 	if err != nil {
 		return fmt.Errorf("error loading data: %w", err)
 	}
@@ -258,6 +281,69 @@ func SolveB() error {
 
 	result := int64(1)
 
+	fmt.Println(plan(grid))
+
+	s := start(grid)
+	startPos := possible(grid, s)
+	if len(startPos) != 2 {
+		return fmt.Errorf("pipe loop needs two possible starting points only")
+	}
+
+	curr := startPos[0]
+
+	moves, pplan, err := follow(grid, s, curr, s)
+	if err != nil {
+		fmt.Printf("not valid loop  %s -> %s (%v) \n", s, curr, err)
+	} else {
+		//fmt.Printf("solution with moves %d\n", moves)
+		result = int64(moves) / 2
+		if result%2 != 0 {
+			// add one more if odd number of moves
+			result++
+		}
+	}
+
+	fmt.Println(pplan)
+
+	iplan := make([][]rune, len(grid))
+	for x := 0; x < len(grid); x++ {
+		iplan[x] = []rune(strings.Repeat(" ", len(grid[0])))
+	}
+
+	tiles := 0
+	inside := 0
+	for y, line := range pplan {
+		for x := range line {
+
+			if x == len(line)-1 {
+				continue
+			}
+
+			fmt.Printf("%c", pplan[y][x])
+
+			if inside%2 == 1 {
+				if pplan[y][x] == '.' {
+					// count tiles
+					tiles++
+					iplan[y][x] = 'I'
+				} else {
+					inside++
+				}
+				continue
+			} else {
+				if pplan[y][x] != '.' {
+					inside++
+				}
+			}
+		}
+
+		inside = 0
+		fmt.Println()
+	}
+
+	fmt.Println(plan(iplan))
+
+	result = int64(tiles)
 	slog.Info("day10 solution b", "result", result)
 
 	return nil

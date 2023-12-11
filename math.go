@@ -2,9 +2,9 @@ package advent2023
 
 import "strconv"
 
-func Sum(vals []int) int {
+func Sum(in []int) int {
 	acc := 0
-	for _, a := range vals {
+	for _, a := range in {
 		acc += a
 	}
 
