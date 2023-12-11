@@ -15,7 +15,7 @@ func (s Set) Contains(v string) bool {
 	return false
 }
 
-func ToSet(in []string) Set {
+func ToSet(in ...string) Set {
 	res := make(Set)
 	for _, v := range in {
 		res[v] = struct{}{}

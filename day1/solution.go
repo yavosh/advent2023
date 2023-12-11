@@ -1,9 +1,10 @@
 package day1
 
 import (
-	"github.com/yavosh/advent2023"
 	"log/slog"
 	"strings"
+
+	"github.com/yavosh/advent2023"
 )
 
 func Solve() error {
@@ -12,10 +13,7 @@ func Solve() error {
 		return err
 	}
 
-	//fmt.Printf("data: %v\n", data)
-
 	acc := 0
-
 	for _, line := range data {
 		var first, last rune
 		for _, r := range line {
@@ -64,7 +62,7 @@ func SolveB() error {
 	return err
 }
 
-// clean will replace word values for digits with digits
+// clean will replace word values for digit names with actual digits
 func clean(s string) string {
 	subs := map[string]string{
 		"zero":  "0",

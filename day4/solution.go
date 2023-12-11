@@ -2,10 +2,11 @@ package day4
 
 import (
 	"fmt"
-	"github.com/yavosh/advent2023"
 	"log/slog"
 	"strconv"
 	"strings"
+
+	"github.com/yavosh/advent2023"
 )
 
 func Solve() error {
@@ -26,7 +27,7 @@ func Solve() error {
 		winners := strings.Fields(val[0:strings.Index(val, "|")])
 		numbers := strings.Fields(val[strings.Index(val, "|")+1:])
 
-		wins := advent2023.ToSet(winners)
+		wins := advent2023.ToSet(winners...)
 
 		score := 0
 
@@ -78,7 +79,7 @@ func SolveB() error {
 		val := line[strings.Index(line, ":")+1:]
 		winners := strings.Fields(val[0:strings.Index(val, "|")])
 		numbers := strings.Fields(val[strings.Index(val, "|")+1:])
-		wins := advent2023.ToSet(winners)
+		wins := advent2023.ToSet(winners...)
 
 		score := 0
 		for _, n := range numbers {

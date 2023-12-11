@@ -60,25 +60,28 @@ func Lines(d string) ([]string, error) {
 }
 
 func Grid(d string) ([][]rune, error) {
-	lines, err := Lines(d)
+	data, err := Input(d)
 	if err != nil {
 		return nil, err
 	}
 
-	res := make([][]rune, len(lines))
-	for i, line := range lines {
+	res := make([][]rune, 0)
+	for _, line := range trimLines(strings.Split(data, NewLine)) {
+		if line == "" {
+			continue
+		}
+
 		gridLine := make([]rune, len(line))
 		for j, c := range line {
 			gridLine[j] = c
 		}
 
-		res[i] = gridLine
+		res = append(res, gridLine)
 	}
 
 	return res, nil
 }
 
-// trimLines will return only string lines which are not empty
 func trimLines(in []string) []string {
 	out := make([]string, len(in))
 	for i, v := range in {

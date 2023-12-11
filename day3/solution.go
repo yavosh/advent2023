@@ -2,8 +2,9 @@ package day3
 
 import (
 	"fmt"
-	"github.com/yavosh/advent2023"
 	"log/slog"
+
+	"github.com/yavosh/advent2023"
 )
 
 func Solve() error {
@@ -75,13 +76,6 @@ func SolveB() error {
 		//slog.Info("data", "line", line)
 		for x, r := range line {
 			//slog.Info("rune", "y", y, "x", x, "r", string(r))
-
-			//if r == '*' {
-			//	id := fmt.Sprintf("%d_%d", y, x)
-			//	cnt := adjacentCountFunc(data, y, x, advent2023.IsDigit)
-			//	slog.Info("gear", "id", id, "cnt", cnt)
-			//	gears[id]++
-			//}
 
 			if advent2023.IsDigit(r) {
 				part += string(r)
